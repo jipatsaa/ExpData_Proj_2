@@ -1,3 +1,8 @@
+#Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, 
+#which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? 
+#Which have seen increases in emissions from 1999–2008? 
+#Use the ggplot2 plotting system to make a plot answer this question.
+
 library(plyr)
 library(ggplot2)
 
@@ -42,22 +47,22 @@ downloadFromURLAndUnzip("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FN
 ## This first line will likely take a few seconds. Be patient!
 NEI <- readRDS("./data/summarySCC_PM25.rds")
 
-## Keep only the observations from baltimore and keep the (columns) information needed
-NEISubset<-subset(NEI,fips == "24510",select=c(year,type,Emissions)) 
+## Keep only the observations from Baltimore and keep the (columns) information needed
+NEIBaltimoreSub<-subset(NEI,fips == "24510",select=c(year,type,Emissions)) 
 
 
 ## Sum up the emissions by year and type
-NEISumEmissionsByYearType <- ddply(NEISubset, .(year,type), summarise, sumEmissions = sum(Emissions, na.rm = TRUE))
-NEISumEmissionsByYearType <- ddply(NEISubset, .(year,type), summarise, sumEmissions=sum(Emissions, na.rm = TRUE))
+NEISumEmissionsByYearType <- ddply(NEIBaltimoreSub, .(year,type), summarise, Emissions=sum(Emissions, na.rm = TRUE))
+#NEISumEmissionsByYearType <- ddply(NEISubset, .(year,type), summarise, sumEmissions = sum(Emissions, na.rm = TRUE))
 
 ## Using the base plotting system to plot the evolution of the Emissions year by year and type
-## The plot shows that the Emissions decend
+# Facets in clockwise sense
+ggplot(NEISumEmissionsByYearType, aes(year, Emissions))+ facet_wrap(~type)+ ggtitle("Emissions in Baltimore for the different types")+theme(plot.title = element_text(face="bold"))+geom_line()
 
-ggplot(NEISumEmissionsByYearType, aes(NEISumEmissionsByYearType$year, NEISumEmissionsByYearType$sumEmissions))+ facet_grid(.~type)+geom_line()
+# All facets in vertical
+#ggplot(NEISumEmissionsByYearType, aes(year, Emissions))+ facet_grid(.~type)+ ggtitle("Emissions in Baltimore for the different types")+geom_line()
 
-#par(mar=c(4,4,4,1))
-#plot(NEISumEmissionsByYear$year,NEISumEmissionsByYear$sumEmissions,type="l",xlab="Year",ylab="PM25-PRI Emissions",main="Emissions by Year in Baltimore (MA)",xlim=c(1999, 2008),xaxs="r")
-#points(NEISumEmissionsByYear$year,NEISumEmissionsByYear$sumEmissions,pch=1)#adding triangles showing the "real data points"
+
 
 pngFile <- "plot3.png"
 dev.copy(png, file = pngFile)
