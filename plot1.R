@@ -50,8 +50,9 @@ NEISumEmissionsByYear <- ddply(NEISubset, .(year), summarise, sumEmissions = sum
 ## Using the base plotting system to plot the evolution of the Emissions year by year
 ## The plot shows that the Emissions decend
 par(mar=c(4,4,3,1))
-plot(NEISumEmissionsByYear$year,NEISumEmissionsByYear$sumEmissions,type="l",xlab="Year",ylab="PM25-PRI Emissions",main="Emissions by Year")
+plot(NEISumEmissionsByYear$year,NEISumEmissionsByYear$sumEmissions,type="l",xlab="Year",ylab="PM25-PRI Emissions",main="Emissions by Year",xlim=c(1998, 2008))
 points(NEISumEmissionsByYear$year,NEISumEmissionsByYear$sumEmissions,pch=2)#adding triangles showing the "real data points"
+
 pngFile <- "plot1.png"
 dev.copy(png, file = pngFile)
 dev.off()
